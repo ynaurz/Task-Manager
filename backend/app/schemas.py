@@ -1,13 +1,18 @@
-from pydantic import BaseModel;
+from pydantic import BaseModel
+
 
 class TaskCreate(BaseModel):
     title: str
 
+
 class TaskUpdate(BaseModel):
     title: str
 
-class Task(BaseModel):
 
+class Task(BaseModel):
     id: int
     title: str
     status: str
+
+    class Config:
+        from_attributes = True
