@@ -1,0 +1,23 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: task-manager-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app:Z
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: task-manager-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app:Z
+      - /app/node_modules
+    environment:
+      - VITE_API_BASE_URL=http://127.0.0.1:8000
+    depends_on:
+      - backend

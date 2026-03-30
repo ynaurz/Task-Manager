@@ -142,3 +142,49 @@ h1 {
   color: white;
   border-color: #2563eb;
 }
+
+.edit-task-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1px solid #cfd8e3;
+  border-radius: 8px;
+  outline: none;
+  background-color: #fff;
+  color: #222;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.edit-task-input:focus {
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 3px rgba(79,140,255,0.15);
+}
+
+.edit-btn {
+  background-color: #f0ad4e;
+  color: white;
+}
+
+.edit-btn:hover{
+  opacity: 0.9;
+}
+
+.save-btn{
+  background-color: #28a745;
+  color: white;
+}
+
+.save-btn:hover {
+  opacity: 0.9;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover {
+  opacity: 0.9;
+}

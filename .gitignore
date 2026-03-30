@@ -1,24 +1,22 @@
-# Python virtual environments
-venv/
-.venv/
+# Python
 backend/venv/
-backend/.venv/
-
-# Python cache
-__pycache__/
-*.py[cod]
-
-# Environment files
-.env
+backend/__pycache__/
+backend/app/__pycache__/
+*.pyc
 
 # Node
-node_modules/
-dist/
-build/
+frontend/node_modules/
+frontend/dist/
 
-# VS Code
-.vscode/
+# Environment files
+frontend/.env
+backend/.env
 
-# OS
+# OS / editor
 .DS_Store
-Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*

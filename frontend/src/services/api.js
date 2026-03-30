@@ -1,30 +1,67 @@
-import mockTasks from "../data/mockTasks";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-let tasks = [...mockTasks];
+export async function getTasks() {
 
-export function getTasks(){
-    return Promise.resolve([...tasks]);
+    const response = await fetch(`${API_BASE_URL}/tasks`);
+
+    if(!response.ok) {
+        throw new Error("Failed to fetch tasks");
+    }
+
+    return response.json();
 }
 
-export function createTask(title) {
-    const newTask = {
-        id: Date.now(),
-        title,
-        status: "todo",
-    };
+export async function createTask(title) {
+    const response = await fetch(`${API_BASE_URL}/tasks`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title }),
+    });
 
-    tasks = [newTask, ...tasks];
-    return Promise.resolve(newTask);
+    if(!response.ok) {
+        throw new Error("Failed to create task");
+    }
+
+    return response.json();
 }
 
-export function deleteTask(taskId) {
-    tasks = tasks.filter((task) => task.id !== taskId);
-    return Promise.resolve();
+export async function deleteTask(taskId) {
+    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+        method: "DELETE",
+    });
+
+    if(!response.ok) {
+        throw new Error("Failed to delete task");
+    }
+
+    return response.json();
 }
 
-export function toggleTaskStatus(taskId) {
-    tasks = tasks.map((task) => task.id === taskId ? {...task, status: task.status === "done" ? "todo" : "done",} : task);
+export async function toggleTaskStatus(taskId) {
+    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}/toggle`, {
+        method: "PATCH",
+    });
 
-    const updatedTask = tasks.find((task) => task.id === taskId);
-    return Promise.resolve(updatedTask);
+    if(!response.ok) {
+        throw new Error("Failed to toggle task status");
+    }
+    
+    return response.json();
+}
+
+export async function updateTask(taskId, title) {
+    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title }),
+    });
+
+    if(!response.ok) {
+        throw new Error("Failed to update task");
+    }
+    return response.json();
 }

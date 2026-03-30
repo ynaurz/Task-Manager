@@ -1,8 +1,8 @@
 import TaskItem from "./TaskItem"
 
-function TaskList({tasks, onDeleteTask, onToggleStatus}) {
+function TaskList({tasks, onDeleteTask, onToggleStatus, onUpdatedTask}) {
     if (tasks.length === 0) {
-        return <p className = "empty-message">Not tasks yet.</p>;
+        return <p className = "empty-message">No tasks yet.</p>;
     }
 
     return (
@@ -13,6 +13,7 @@ function TaskList({tasks, onDeleteTask, onToggleStatus}) {
                 task = {task}
                 onDeleteTask = {onDeleteTask}
                 onToggleStatus = {onToggleStatus}
+                onUpdatedTask={onUpdatedTask}
                 />
             ))}
         </div>

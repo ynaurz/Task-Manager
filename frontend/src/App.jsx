@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
-import { getTasks,createTask,deleteTask,toggleTaskStatus } from "./services/api";
+import { getTasks,createTask,deleteTask,toggleTaskStatus, updateTask } from "./services/api";
 
 
 function App() {
@@ -24,7 +24,6 @@ function App() {
   };
 
 
-
   const handleDeleteTask = async (taskId) => {
     await deleteTask(taskId);
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
@@ -34,6 +33,14 @@ function App() {
     const updatedTask = await toggleTaskStatus(taskId);
 
     setTasks((prevTasks) => prevTasks.map((task) => task.id === taskId ? updatedTask : task));
+  };
+
+  const handleUpdatedTask = async (taskId, newTitle) => {
+    const updatedTask = await updateTask(taskId, newTitle);
+
+    setTasks((prevTasks) => 
+    prevTasks.map((task) => (task.id === taskId ? updatedTask : task))
+    );
   };
 
 
@@ -76,6 +83,7 @@ function App() {
           tasks={filteredTasks}
           onDeleteTask={handleDeleteTask}
           onToggleStatus={handleToggleStatus}
+          onUpdatedTask={handleUpdatedTask}
         />
       </div>
     </div>
