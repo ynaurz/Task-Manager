@@ -1,26 +1,55 @@
 import { useState } from "react";
 
-function TaskItem ({ task, onDeleteTask, onToggleStatus, onUpdatedTask }) {
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedTitle, setEditedTitle] = useState(task.title);
+function TaskItem({ task, onDeleteTask, onToggleStatus, onUpdatedTask }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(task.title);
+  const [editedDueDate, setEditedDueDate] = useState(task.due_date || "");
+  const [isLoading, setIsLoading] = useState(false);
 
-    const handleSave = async () => {
-        const trimmedTitle = editedTitle.trim();
+  const handleSave = async () => {
+    const trimmedTitle = editedTitle.trim();
 
-        if(!trimmedTitle) {
-            return;
-        }
+    if (!trimmedTitle) {
+      return;
+    }
 
-        await onUpdatedTask(task.id, trimmedTitle);
-        setIsEditing(false);
-    };
+    try {
+      setIsLoading(true);
+      await onUpdatedTask(task.id, {
+        title: trimmedTitle,
+        due_date: editedDueDate || null,
+      });
+      setIsEditing(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    const handleCancel = () => {
-        setEditedTitle(task.title);
-        setIsEditing(false);
-    };
+  const handleCancel = () => {
+    setEditedTitle(task.title);
+    setEditedDueDate(task.due_date || "");
+    setIsEditing(false);
+  };
 
-      return (
+  const handleToggle = async () => {
+    try {
+      setIsLoading(true);
+      await onToggleStatus(task.id);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      setIsLoading(true);
+      await onDeleteTask(task.id);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
     <div className={`task-item ${task.status === "done" ? "done" : ""}`}>
       <div className="task-content">
         {isEditing ? (
@@ -30,13 +59,24 @@ function TaskItem ({ task, onDeleteTask, onToggleStatus, onUpdatedTask }) {
               type="text"
               value={editedTitle}
               onChange={(event) => setEditedTitle(event.target.value)}
+              disabled={isLoading}
             />
+
+            <input
+              className="edit-task-input"
+              type="date"
+              value={editedDueDate}
+              onChange={(event) => setEditedDueDate(event.target.value)}
+              disabled={isLoading}
+            />
+
             <p>Status: {task.status}</p>
           </>
         ) : (
           <>
             <h3>{task.title}</h3>
             <p>Status: {task.status}</p>
+            {task.due_date && <p>Date: {task.due_date}</p>}
           </>
         )}
       </div>
@@ -44,26 +84,31 @@ function TaskItem ({ task, onDeleteTask, onToggleStatus, onUpdatedTask }) {
       <div className="task-actions">
         {isEditing ? (
           <>
-            <button className="save-btn" onClick={handleSave}>
-              Save
+            <button className="save-btn" onClick={handleSave} disabled={isLoading}>
+              {isLoading ? "Saving..." : "Save"}
             </button>
-            <button className="cancel-btn" onClick={handleCancel}>
+            <button className="cancel-btn" onClick={handleCancel} disabled={isLoading}>
               Cancel
             </button>
           </>
         ) : (
           <>
-            <button onClick={() => onToggleStatus(task.id)}>
+            <button className = "toggle-btn" onClick={handleToggle} disabled={isLoading}>
               {task.status === "done" ? "Mark as TODO" : "Mark as Done"}
             </button>
-            <button className="edit-btn" onClick={() => setIsEditing(true)}>
+            <button
+              className="edit-btn"
+              onClick={() => setIsEditing(true)}
+              disabled={isLoading}
+            >
               Edit
             </button>
             <button
               className="delete-btn"
-              onClick={() => onDeleteTask(task.id)}
+              onClick={handleDelete}
+              disabled={isLoading}
             >
-              Delete
+              {isLoading ? "Working..." : "Delete"}
             </button>
           </>
         )}
